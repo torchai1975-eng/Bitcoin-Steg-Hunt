@@ -99,29 +99,29 @@
 		  color: #ffd700;
 		  margin: 10px 0;
 		}
-		@media (max-width: 900px) {
-			.toolbar {
-			 display: flex !important;
-			 flex-wrap: wrap;
-			 height: auto !important;
-			 min-height: 40px !important;
-			 }
+		<!-- @media (max-width: 900px) { -->
+			<!-- .toolbar { -->
+			 <!-- display: flex !important; -->
+			 <!-- flex-wrap: wrap; -->
+			 <!-- height: auto !important; -->
+			 <!-- min-height: 40px !important; -->
+			 <!-- } -->
 			 
-			 #toolbarcontainer {
-				display:block !important;
-				height: auto !important;
-			}
+			 <!-- #toolbarcontainer { -->
+				<!-- display:block !important; -->
+				<!-- height: auto !important; -->
+			<!-- } -->
 			
-			.toolbarButton, .splitToolbarButton, #zoomIn, #zoomOut, #searchButton {
-				display: inline-flex !important;
+			<!-- .toolbarButton, .splitToolbarButton, #zoomIn, #zoomOut, #searchButton { -->
+				<!-- display: inline-flex !important; -->
 				
-			}
+			<!-- } -->
 			
-			#searchBar {
-				display: flex !important;
-				width: 100% !important;
-				max-width: 300px;
-			}
+			<!-- #searchBar { -->
+				<!-- display: flex !important; -->
+				<!-- width: 100% !important; -->
+				<!-- max-width: 300px; -->
+			<!-- } -->
   </style>
 </head>
 <body>
@@ -169,7 +169,7 @@
   <div class="tab-content" id="tab1">
     <h1>Bitcoin Whitepaper</h1>
  
-    <iframe id="pdfViewer" src=""></iframe>
+    <iframe id="pdfViewer" src="" width="100%" height="700px"></iframe>
   </div>
 
   <!-- Tab 3: Get Hints -->
@@ -190,7 +190,7 @@
       document.querySelectorAll('.tab-content').forEach((c,i) => c.classList.toggle('active', i===n));
      
       if (n === 1) {
-        document.getElementById('pdfViewer').src = '/bitcoin.pdf';
+        document.getElementById('pdfViewer').src = '/bitcoin.pdf#toolbar=1';
       }
     }
 	
