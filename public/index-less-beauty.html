@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BSV Puzzle Trail • 12 Hints</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .logo-font { font-family: 'Space Grotesk', sans-serif; }
+        .bg-header {
+            background-image: url('./public/bitcoin_steg_hunt-bg');
+            background-size: 100% auto;
+            background-position: top center;
+            background-repeat: no-repeat;
+	}
+        .bg-whitepaper {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-image: url('/background-trail-s-curve.png');
+            background-size: 100% auto;
+            background-position: top center;
+            background-repeat: no-repeat;
+            opacity: 0.18;
+            mix-blend-mode: multiply;
+            filter: contrast(1.1) brightness(0.86);
+        }
+       
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+       
+        .puzzle-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .puzzle-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgb(16 185 129);
+        }
+        canvas { max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    </style>
+</head>
+<body class="bg-zinc-950 text-white min-h-screen">
+    <div class="bg-whitepaper"></div>
+
+    <!-- Navbar -->
+    <nav class="bg-header border-b border-zinc-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-emerald-500 rounded-2xl flex items-center justify-center text-3xl">🧩</div>
+                <h1 class="logo-font text-3xl tracking-tighter">Bitcoin Steg Hunt</h1>
+            </div>
+            <div class="flex gap-8 text-lg font-medium">
+                <button onclick="switchTab(0)" class="hover:text-emerald-400 transition-colors" id="tab-btn-0">Home</button>
+                <button onclick="switchTab(1)" class="hover:text-emerald-400 transition-colors" id="tab-btn-1">📄 Whitepaper</button>
+                <button onclick="switchTab(2)" class="hover:text-emerald-400 transition-colors text-emerald-400" id="tab-btn-2">🧩 Bitcoin Steg Hunt</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-6 py-12">
+
+        <!-- TAB 0: Home -->
+        <div id="tab-0" class="tab-content">
+            <div class="text-center py-20 max-w-2xl mx-auto">
+                <h2 class="text-6xl font-bold tracking-tighter mb-6">The Puzzle</h2>
+                
+        	<p class="text-zinc-400 text-center max-w-lg mx-auto mb-12">I believe the Bitcoin Whitepaper holds a puzzle that may lead to the genesis private key /n 
+	    	 am stuck with the puzzle, but I have gathered quite some hints to get started and perhaps you are better placed to solve whatever this puzzle beholds" </p>
+            </div>
+        </div>
+
+        <!-- TAB 1: Whitepaper -->
+        <div id="tab-1" class="tab-content">
+            <h2 class="text-4xl font-semibold mb-8">Bitcoin Whitepaper</h2>
+            <div class="bg-zinc-900 rounded-3xl p-6 md:p-10 border border-zinc-700">
+                <div class="flex justify-between mb-6">
+                    <button onclick="prevPage()" class="px-6 py-3 bg-zinc-800 hover:bg-zinc-700 rounded-2xl">← Previous</button>
+                    <div class="font-mono text-lg">Page <span id="page-num">1</span> of <span id="page-count">9</span></div>
+                    <button onclick="nextPage()" class="px-6 py-3 bg-zinc-800 hover:bg-zinc-700 rounded-2xl">Next →</button>
+                </div>
+                <div id="pdf-viewer" class="flex justify-center min-h-[600px] bg-zinc-950 rounded-2xl p-4"></div>
+                <div id="pdf-error" class="hidden text-center py-12 text-red-400"></div>
+            </div>
+        </div>
+
+        <!-- TAB 2: Hints -->
+        <div id="tab-2" class="tab-content">
+            <h2 class="text-5xl font-semibold text-center mb-4">Welcome to the Bitcoin Steg Hunt</h2>
+            <p class="text-zinc-400 text-center max-w-lg mx-auto mb-12">I believe the Bitcoin Whitepaper holds a puzzle that may lead to the genesis private key /n 
+	    I am stuck with the puzzle, but I have gathered quite some hints to get started and perhaps you are better placed to solve whatever this puzzle beholds" </p>
+	   
+           
+            <div id="puzzle-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="payment-modal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-xl z-[100] flex items-center justify-center">
+        <div class="bg-zinc-900 rounded-3xl p-8 max-w-md w-full mx-4 relative">
+            <button onclick="closePaymentModal()" class="absolute top-6 right-6 text-4xl text-zinc-400 hover:text-white">×</button>
+           
+            <h3 class="text-2xl font-semibold text-center mb-6" id="modal-puzzle-title">Hint X</h3>
+           
+            <div class="flex justify-center mb-6">
+                <img id="payment-qr" class="rounded-2xl shadow-2xl" width="280" height="280">
+            </div>
+           
+            <div id="modal-amount" class="text-center text-emerald-400 font-mono text-xl mb-6"></div>
+           
+            <p class="text-center text-zinc-400 text-sm">Waiting for your payment...<br>
+            <span id="countdown" class="font-mono text-emerald-300"></span></p>
+        </div>
+    </div>
+
+    <!-- Solution Modal -->
+    <div id="solution-modal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-xl z-[100] flex items-center justify-center">
+        <div class="bg-zinc-900 rounded-3xl p-10 max-w-lg w-full mx-4 relative">
+            <button onclick="hideSolutionModal()" class="absolute top-6 right-6 text-4xl text-zinc-400 hover:text-white">×</button>
+            <div id="modal-content" class="text-center"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.hostname === "localhost" ? "http://localhost:3000" : "";
+        let pdfDoc = null;
+        let currentPage = 1;
+        let totalPages = 1;
+        let currentSessionId = null;
+        let pollInterval = null;
+
+        // Puzzle data (must match your server.js)
+        const puzzles = {
+            1:  { amountSat: 10000,  title: "Hint 1 - Genesis" },
+            2:  { amountSat: 15000,  title: "Hint 2" },
+            3:  { amountSat: 20000,  title: "Hint 3" },
+            4:  { amountSat: 25000,  title: "Hint 4" },
+            5:  { amountSat: 30000,  title: "Hint 5" },
+            6:  { amountSat: 40000,  title: "Hint 6" },
+            7:  { amountSat: 50000,  title: "Hint 7" },
+            8:  { amountSat: 60000,  title: "Hint 8" },
+            9:  { amountSat: 75000,  title: "Hint 9" },
+            10: { amountSat: 100000, title: "Hint 10" },
+            11: { amountSat: 150000, title: "Hint 11" },
+            12: { amountSat: 200000, title: "Hint 12 - Final Key" }
+        };
+
+        // ============== PDF.JS ==============
+        async function loadWhitepaper() {
+            const errorDiv = document.getElementById('pdf-error');
+            try {
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+                const loadingTask = pdfjsLib.getDocument('bitcoin.pdf');
+                pdfDoc = await loadingTask.promise;
+                totalPages = pdfDoc.numPages;
+                document.getElementById('page-count').textContent = totalPages;
+                renderPage(1);
+            } catch (err) {
+                errorDiv.classList.remove('hidden');
+                errorDiv.innerHTML = `<p>Could not load whitepaper.pdf<br><span class="text-sm">Make sure you're running on http://localhost (not file://)</span></p>`;
+            }
+        }
+
+        async function renderPage(pageNum) {
+            if (!pdfDoc) return;
+            currentPage = pageNum;
+            document.getElementById('page-num').textContent = currentPage;
+            const page = await pdfDoc.getPage(pageNum);
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const viewport = page.getViewport({ scale: 1.6 });
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            await page.render({ canvasContext: ctx, viewport }).promise;
+            document.getElementById('pdf-viewer').innerHTML = '';
+            document.getElementById('pdf-viewer').appendChild(canvas);
+        }
+
+        function nextPage() { if (currentPage < totalPages) renderPage(currentPage + 1); }
+        function prevPage() { if (currentPage > 1) renderPage(currentPage - 1); }
+
+        // ============== PAYMENT SYSTEM ==============
+        async function startPayment(puzzleId) {
+            try {
+                const res = await fetch(`${API_BASE}/api/create-payment`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ puzzleId })
+                });
+                const data = await res.json();
+
+                if (!data.success) return alert(data.message || "Failed to create payment");
+
+                currentSessionId = data.sessionId;
+
+                document.getElementById('modal-puzzle-title').textContent = puzzles[puzzleId].title;
+                document.getElementById('modal-amount').textContent = `${data.amount} BSV`;
+                document.getElementById('payment-qr').src =
+                    `https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=${encodeURIComponent(data.qrData)}`;
+
+                document.getElementById('payment-modal').classList.remove('hidden');
+                document.getElementById('payment-modal').classList.add('flex');
+
+                startPolling(puzzleId);
+            } catch (e) {
+                alert("Could not connect to server");
+            }
+        }
+
+        function startPolling(puzzleId) {
+            let timeLeft = 600;
+            if (pollInterval) clearInterval(pollInterval);
+
+            pollInterval = setInterval(async () => {
+                timeLeft -= 4;
+                document.getElementById('countdown').textContent = `~${Math.floor(timeLeft/60)}m ${timeLeft%60}s`;
+
+                if (timeLeft <= 0) {
+                    closePaymentModal();
+                    return;
+                }
+
+                try {
+                    const res = await fetch(`${API_BASE}/api/check-payment`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ sessionId: currentSessionId })
+                    });
+                    const data = await res.json();
+
+                    if (data.paid) {
+                        closePaymentModal();
+                        showSolution(data.title || puzzles[puzzleId].title, data.solution);
+                        clearInterval(pollInterval);
+                    }
+                } catch (e) {}
+            }, 4000);
+        }
+
+        function closePaymentModal() {
+            document.getElementById('payment-modal').classList.add('hidden');
+            document.getElementById('payment-modal').classList.remove('flex');
+            if (pollInterval) clearInterval(pollInterval);
+        }
+
+        function showSolution(title, solution) {
+            document.getElementById('modal-content').innerHTML = `
+                <div class="text-7xl mb-6">🔓</div>
+                <h3 class="text-3xl font-bold mb-6">${title}</h3>
+                <p class="text-emerald-300 text-lg leading-relaxed">${solution}</p>
+                <button onclick="hideSolutionModal()" class="mt-10 w-full py-5 bg-emerald-500 hover:bg-emerald-600 rounded-2xl font-semibold text-lg">
+                    Continue Trail →
+                </button>
+            `;
+            document.getElementById('solution-modal').classList.remove('hidden');
+            document.getElementById('solution-modal').classList.add('flex');
+        }
+
+        function hideSolutionModal() {
+            document.getElementById('solution-modal').classList.add('hidden');
+            document.getElementById('solution-modal').classList.remove('flex');
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(`tab-${tab}`).classList.add('active');
+            if (tab === 1 && !pdfDoc) setTimeout(loadWhitepaper, 200);
+        }
+
+        // Generate puzzle cards
+        function createPuzzleCards() {
+            const container = document.getElementById('puzzle-grid');
+            container.innerHTML = '';
+            for (let i = 1; i <= 12; i++) {
+                const card = document.createElement('div');
+                card.className = "puzzle-card bg-zinc-900 border border-zinc-700 rounded-3xl p-8 text-center";
+                card.innerHTML = `
+                    <div class="text-emerald-400 text-sm mb-3">HINT ${i}</div>
+                    <h3 class="text-2xl font-semibold mb-8">Puzzle ${i}</h3>
+                    <button onclick="startPayment(${i})"
+                            class="w-full py-5 bg-emerald-500 hover:bg-emerald-600 rounded-2xl font-semibold text-lg">
+                        Pay to Unlock
+                    </button>
+                `;
+                container.appendChild(card);
+            }
+        }
+
+        // Initialize
+        window.onload = () => {
+            createPuzzleCards();
+            switchTab(0);
+            console.log("%c✅ Bitcoin Steg Hunt!", "color:#10b981; font-size:16px");
+        };
+    </script>
+</body>
+</html>

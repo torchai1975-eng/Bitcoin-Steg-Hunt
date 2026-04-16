@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BSV Puzzle Trail</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #0f0f0f; color: #e0e0e0; margin:0; padding:0; }
+    .tabs { display: flex; background: #1a1a1a; position: sticky; top: 0; z-index: 100; }
+    .tab {
+      padding: 16px 28px;
+      cursor: pointer;
+      background: #222;
+      color: #ccc;
+      border: none;
+      font-size: 16px;
+    }
+    .tab.active { background: #ffd700; color: black; font-weight: bold; }
+    .tab-content { display: none; padding: 20px; max-width: 1200px; margin: 0 auto; }
+    .tab-content.active { display: block; }
+    iframe { width: 100%; height: 88vh; border: none; background: #1a1a1a; border-radius: 8px; }
+  </style>
+</head>
+<body>
+
+  <div class="tabs">
+    <button class="tab active" onclick="openTab(0)">How It Works</button>
+    <button class="tab" onclick="openTab(1)">Whitepaper</button>
+    <button class="tab" onclick="openTab(2)">Get Hints (Payments)</button>
+  </div>
+
+  <!-- Tab 1 -->
+  <div class="tab-content active" id="tab0">
+    <h1>BSV Puzzle Trail</h1>
+    <div style="background:#222; padding:25px; border-radius:12px;">
+      <ol>
+        <li>Go to <strong>Get Hints</strong> tab</li>
+        <li>Send exact amount</li>
+        <li>Put your email in the Memo field (e.g. hint5-john@gmail.com)</li>
+        <li>I will email you the hint</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- Tab 2: Whitepaper using CDN pdf.js Viewer -->
+  <div id="tab-1" class="tab-content">
+     <h2 class="text-4xl font-semibold mb-8">Bitcoin Whitepaper</h2>
+     <div class="bg-zinc-900 rounded-3xl p-6 md:p-10 border border-zinc-700">
+        <div class="flex justify-between mb-6">
+           <button onclick="prevPage()" class="px-6 py-3 bg-zinc-800 hover:bg-zinc-700 rounded-2xl">← Previous</button>
+           <div class="font-mono text-lg">Page <span id="page-num">1</span> of <span id="page-count">9</span></div>
+           <button onclick="nextPage()" class="px-6 py-3 bg-zinc-800 hover:bg-zinc-700 rounded-2xl">Next →</button>
+        </div>
+  	<div id="pdf-viewer" class="flex justify-center min-h-[600px] bg-zinc-950 rounded-2xl p-4"></div>
+  	<div id="pdf-error" class="hidden text-center py-12 text-red-400"></div>
+      </div>
+  </div>
+
+  <!-- Tab 3: Payments -->
+  <div class="tab-content" id="tab2">
+    <h1>Get Hints - Make Payment</h1>
+    <p style="text-align:center; color:#ffd700;">
+      Receiving Address: <strong id="address">YOUR_BSV_ADDRESS_HERE</strong>
+    </p>
+    <div id="payment-cards"></div>
+  </div>
+
+  <script>
+    const YOUR_ADDRESS = "YOUR_BSV_ADDRESS_HERE";   // ← CHANGE THIS
+
+    const puzzles = [ /* paste your full puzzles array here */ ];
+
+    function openTab(tabIndex) {
+      document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i===tabIndex));
+      document.querySelectorAll('.tab-content').forEach((c,i) => c.classList.toggle('active', i===tabIndex));
+
+      if (tabIndex === 1) {
+        const viewer = document.getElementById('pdfViewer');
+        // Using a reliable public pdf.js viewer from CDN
+        viewer.src = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/web/viewer.html?file=${encodeURIComponent('bitcoin.pdf')}`;
+      }
+    }
+
+// ============== PDF.JS ==============
+        async function loadWhitepaper() {
+            const errorDiv = document.getElementById('pdf-error');
+            try {
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+                const loadingTask = pdfjsLib.getDocument('./bitcoin.pdf');
+                pdfDoc = await loadingTask.promise;
+                totalPages = pdfDoc.numPages;
+                document.getElementById('page-count').textContent = totalPages;
+                renderPage(1);
+            } catch (err) {
+                errorDiv.classList.remove('hidden');
+                errorDiv.innerHTML = `<p>Could not load whitepaper.pdf<br><span class="text-sm">Make sure you're running on http://localhost (not file://)</span></p>`;
+            }
+        }
+
+        async function renderPage(pageNum) {
+            if (!pdfDoc) return;
+            currentPage = pageNum;
+            document.getElementById('page-num').textContent = currentPage;
+            const page = await pdfDoc.getPage(pageNum);
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const viewport = page.getViewport({ scale: 1.6 });
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            await page.render({ canvasContext: ctx, viewport }).promise;
+            document.getElementById('pdf-viewer').innerHTML = '';
+            document.getElementById('pdf-viewer').appendChild(canvas);
+        }
+
+        function nextPage() { if (currentPage < totalPages) renderPage(currentPage + 1); }
+        function prevPage() { if (currentPage > 1) renderPage(currentPage - 1); }
+
+    // Payment cards (same as before)
+    function renderPaymentCards() {
+      const container = document.getElementById('payment-cards');
+
+      puzzles.forEach(p => {
+        const memoExample = `hint${p.id}-your@email.com`;
+        const paymentUri = `bitcoin:${YOUR_ADDRESS}?amount=${p.priceBSV}&message=${encodeURIComponent(memoExample)}`;
+
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <h3>${p.title}</h3>          <p><strong>${p.amountSat.toLocaleString()} sat</strong> (${p.priceBSV} BSV)</p>
+          <div class="qr" id="qr-${p.id}"></div>
+          <p style="font-size:0.9em; color:#aaa;">Memo: <strong>${memoExample}</strong></p>
+          <a href="${paymentUri}" style="color:#ffd700; font-weight:bold;">💸 Pay Now</a>
+        `;
+        container.appendChild(card);
+
+        setTimeout(() => new QRCode(`qr-${p.id}`, { text: paymentUri, width: 190, height: 190 }), 100);
+      });
+    }
+
+    document.getElementById('address').textContent = YOUR_ADDRESS;
+    renderPaymentCards();
+  </script>
+</body>
+</html>

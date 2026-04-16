@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bitcoin Steg Hunt</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #0f0f0f;
+      color: #e0e0e0;
+      margin:0;
+      padding:0;
+    }
+    .tabs {
+      display: flex;
+      background: #1a1a1a;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .tab {
+      padding: 16px 28px;
+      cursor: pointer;
+      background: #222;
+      color: #ccc;
+      border: none;
+      font-size: 16px;
+    }
+    .tab.active {
+      background: #ffd700;
+      color: black;
+      font-weight: bold;
+    }
+    .tab-content {
+      display: none;
+      padding: 30px;
+      max-width: 1250px;
+      margin: 0 auto;
+    }
+    .tab-content.active { display: block; }
+
+    /* Two-column layout for Whitepaper */
+    .tab1-container {
+      display: flex;
+      gap: 45px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      margin-bottom:30px;
+    }
+    .image-side {
+      flex: 1;
+      min-width: 320px;
+    }
+    .text-side {
+      flex: 1.15;
+      min-width: 320px;
+    }
+    .header-image {
+      width: 100%;
+      max-height: 460px;
+      object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.85);
+    }
+
+    iframe {
+      width: 100%;
+      height: 70vh;
+      border: 1px solid #444;
+      background: #1a1a1a;
+      border-radius: 8px;
+      margin-top: 25px;
+    }
+	 .card {
+		  background: #1a1a1a;
+		  border-radius: 12px;
+		  padding: 20px;
+		  margin: 15px 0;
+		  text-align: center;
+		  border: 1px solid #333;
+		  transition: transform 0.2s;
+		}
+		.card:hover {
+		  transform: translateY(-5px);
+		  border-color: #ffd700;
+		}
+		.qr {
+		  margin: 15px auto;
+		  padding: 12px;
+		  background: white;
+		  border-radius: 8px;
+		  display: inline-block;
+		}
+		.amount {
+		  font-size: 1.3em;
+		  font-weight: bold;
+		  color: #ffd700;
+		  margin: 10px 0;
+		}
+  </style>
+</head>
+<body>
+
+  <div class="tabs">
+    <button class="tab active" onclick="openTab(0)">How It Works</button>
+    <button class="tab" onclick="openTab(1)">Whitepaper</button>
+    <button class="tab" onclick="openTab(2)">Get Hints</button>
+  </div>
+
+  <!-- Tab 1: How It Works -->
+  <div class="tab-content active" id="tab0">
+    <div class="tab1-container">
+      <!-- Left: Image -->
+      <div class="image-side">
+        <img src="/bitcoin_steg_hunt-bg.jpg"
+             alt="Bitcoin Steg Hunt"
+             class="header-image">
+      </div>
+
+      <!-- Right: Text explanation -->
+      <div class="text-side">
+        <h2>Welcome to the Bitcoin Steg Hunt</h2>
+        <p>The Bitcoin Whitepaper contains 12 hidden puzzles. Solve them to understand the original vision of Bitcoin.</p>
+        <p>Each puzzle has a corresponding hint. Pay the required amount and include your email in the memo to receive the hint directly in your inbox.</p>
+        <p>This is more than just a game — it's a journey to rediscover Satoshi's true vision for peer-to-peer electronic cash.</p>
+       
+        <p style="margin-top:25px; color:#ffd700;">
+          <strong>Ready to begin?</strong><br>
+          Go to the <strong>Get Hints</strong> tab to start unlocking the secrets.
+        </p>
+      </div>
+    </div>
+    <div style="background:#222; padding:25px; border-radius:12px; max-width:800px; margin:20px auto;">
+      <ol>
+        <li>Go to the <strong>Get Hints</strong> tab</li>
+        <li>Send the exact amount</li>
+        <li>Put your email in the Memo field (e.g. hint5-john@gmail.com)</li>
+        <li>I will email you the hint</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- Tab 2: Whitepaper with image on left, text on right -->
+  <div class="tab-content" id="tab1">
+    <h1>Bitcoin Whitepaper</h1>
+ 
+    <p style="text-align:center; margin-top:30px; color:#ffd700;">
+      Use the search icon 🔍 or press <strong>Ctrl + F</strong> to search the whitepaper
+    </p>
+    <iframe id="pdfViewer" src=""></iframe>
+  </div>
+
+  <!-- Tab 3: Get Hints -->
+  <div class="tab-content" id="tab2">
+    <h1>Get Hints - Make Payment</h1>
+    <p style="text-align:center; color:#ffd700; font-size:1.1em; margin-bottom:30px;">
+      Receiving Address: <strong id="address">YOUR_BSV_ADDRESS_HERE</strong>
+    </p>
+   
+    <div id="payment-cards" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;"></div>
+  </div>
+
+  <script>
+   const YOUR_ADDRESS = "YOUR_BSV_ADDRESS_HERE";
+
+   function openTab(n) {
+      document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i===n));
+      document.querySelectorAll('.tab-content').forEach((c,i) => c.classList.toggle('active', i===n));
+     
+      if (n === 1) {
+        document.getElementById('pdfViewer').src = '/bitcoin.pdf';
+      }
+    }
+	
+  function renderCards() {
+      const container = document.getElementById('payment-cards');
+      container.innerHTML = '';
+
+      const puzzles = [
+        { id: 1,  amountSat: 10000,  title: "Hint 1",  priceBSV: "0.0001" },
+        { id: 2,  amountSat: 15000,  title: "Hint 2",  priceBSV: "0.00015" },
+        { id: 3,  amountSat: 20000,  title: "Hint 3",  priceBSV: "0.0002" },
+        { id: 4,  amountSat: 25000,  title: "Hint 4",  priceBSV: "0.00025" },
+        { id: 5,  amountSat: 30000,  title: "Hint 5",  priceBSV: "0.0003" },
+        { id: 6,  amountSat: 40000,  title: "Hint 6",  priceBSV: "0.0004" },
+        { id: 7,  amountSat: 50000,  title: "Hint 7",  priceBSV: "0.0005" },
+        { id: 8,  amountSat: 60000,  title: "Hint 8",  priceBSV: "0.0006" },
+        { id: 9,  amountSat: 75000,  title: "Hint 9",  priceBSV: "0.00075" },
+        { id: 10, amountSat: 100000, title: "Hint 10", priceBSV: "0.001" },
+        { id: 11, amountSat: 150000, title: "Hint 11", priceBSV: "0.0015" },
+        { id: 12, amountSat: 200000, title: "Hint 12 - Final Key", priceBSV: "0.002" }
+      ];
+
+      puzzles.forEach(p => {
+        const memo = `hint${p.id}-your@email.com`;
+        const uri = `bitcoin:${YOUR_ADDRESS}?amount=${p.priceBSV}&message=${encodeURIComponent(memo)}`;
+
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <h3>${p.title}</h3>
+          <p class="amount">${p.amountSat.toLocaleString()} sat (${p.priceBSV} BSV)</p>
+          <div class="qr" id="qr-${p.id}"></div>
+          <p style="font-size:0.9em; color:#aaa; margin:12px 0;">
+            <strong>Memo:</strong><br>${memo}
+          </p>
+          <a href="${uri}" style="color:#ffd700; font-size:1.05em; font-weight:bold; text-decoration:none;">
+            💸 Pay Now
+          </a>
+        `;
+        container.appendChild(card);
+
+        setTimeout(() => {
+          new QRCode(`qr-${p.id}`, {
+            text: uri,
+            width: 200,
+            height: 200
+          });
+        }, 100);
+      });
+    }
+
+    // Call it when page loads
+    renderCards();
+
+  </script>
+</body>
+</html>
