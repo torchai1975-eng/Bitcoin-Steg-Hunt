@@ -64,7 +64,6 @@
       border-radius: 12px;
       box-shadow: 0 15px 40px rgba(0,0,0,0.85);
     }
-
     iframe {
       width: 100%;
       height: 70vh;
@@ -73,64 +72,42 @@
       border-radius: 8px;
       margin-top: 25px;
     }
-	 .card {
-		  background: #1a1a1a;
-		  border-radius: 12px;
-		  padding: 20px;
-		  margin: 15px 0;
-		  text-align: center;
-		  border: 1px solid #333;
-		  transition: transform 0.2s;
-		}
-		.card:hover {
-		  transform: translateY(-5px);
-		  border-color: #ffd700;
-		}
-		.qr {
-		  margin: 15px auto;
-		  padding: 12px;
-		  background: white;
-		  border-radius: 8px;
-		  display: inline-block;
-		}
-		.amount {
-		  font-size: 1.3em;
-		  font-weight: bold;
-		  color: #ffd700;
-		  margin: 10px 0;
-		}
-		<!-- @media (max-width: 900px) { -->
-			<!-- .toolbar { -->
-			 <!-- display: flex !important; -->
-			 <!-- flex-wrap: wrap; -->
-			 <!-- height: auto !important; -->
-			 <!-- min-height: 40px !important; -->
-			 <!-- } -->
-			 
-			 <!-- #toolbarcontainer { -->
-				<!-- display:block !important; -->
-				<!-- height: auto !important; -->
-			<!-- } -->
-			
-			<!-- .toolbarButton, .splitToolbarButton, #zoomIn, #zoomOut, #searchButton { -->
-				<!-- display: inline-flex !important; -->
-				
-			<!-- } -->
-			
-			<!-- #searchBar { -->
-				<!-- display: flex !important; -->
-				<!-- width: 100% !important; -->
-				<!-- max-width: 300px; -->
-			<!-- } -->
-			.pdf-container {
-			width: 100%;
-			max-width: 100%;
-			overflow: hidden;
-			}
-			#pdfViewer {
-				width: 100% !important;
-				height: 85vh !important;
-		    }
+	.card {
+	  background: #1a1a1a;
+	  border-radius: 12px;
+	  padding: 20px;
+	  margin: 15px 0;
+	  text-align: center;
+	  border: 1px solid #333;
+	  transition: transform 0.2s;
+	}
+	.card:hover {
+	  transform: translateY(-5px);
+	  border-color: #ffd700;
+	}
+	.qr {
+	  margin: 15px auto;
+	  padding: 12px;
+	  background: white;
+	  border-radius: 8px;
+	  display: inline-block;
+	}
+	.amount {
+	  font-size: 1.3em;
+	  font-weight: bold;
+	  color: #ffd700;
+	  margin: 10px 0;
+	}
+
+	.pdf-container {
+	width: 100%;
+	max-width: 100%;
+	overflow: hidden;
+	}
+	#pdfViewer {
+		width: 100% !important;
+		height: 85vh !important;
+	}
   </style>
 </head>
 <body>
@@ -154,7 +131,8 @@
       <!-- Right: Text explanation -->
       <div class="text-side">
         <h2>Welcome to the Bitcoin Steg Hunt</h2>
-        <p>The Bitcoin Whitepaper contains 12 hidden puzzles. Solve them to understand the original vision of Bitcoin.</p>
+        <p>The Bitcoin Whitepaper contains several puzzles. I have reason to believe the puzzles in the references of the Bitcoin whitepaper may lead to the genesis key. </p>
+		<p>Solve them and it may give you access to the private key of the genesis address: "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa" </p>
         <p>Each puzzle has a corresponding hint. Pay the required amount and include your email in the memo to receive the hint directly in your inbox.</p>
         <p>This is more than just a game — it's a journey to rediscover Satoshi's true vision for peer-to-peer electronic cash.</p>
        
@@ -210,18 +188,18 @@
       container.innerHTML = '';
 
       const puzzles = [
-        { id: 1,  amountSat: 10000,  title: "Hint 1",  priceBSV: "0.0001" },
-        { id: 2,  amountSat: 15000,  title: "Hint 2",  priceBSV: "0.00015" },
-        { id: 3,  amountSat: 20000,  title: "Hint 3",  priceBSV: "0.0002" },
-        { id: 4,  amountSat: 25000,  title: "Hint 4",  priceBSV: "0.00025" },
-        { id: 5,  amountSat: 30000,  title: "Hint 5",  priceBSV: "0.0003" },
-        { id: 6,  amountSat: 40000,  title: "Hint 6",  priceBSV: "0.0004" },
-        { id: 7,  amountSat: 50000,  title: "Hint 7",  priceBSV: "0.0005" },
-        { id: 8,  amountSat: 60000,  title: "Hint 8",  priceBSV: "0.0006" },
-        { id: 9,  amountSat: 75000,  title: "Hint 9",  priceBSV: "0.00075" },
-        { id: 10, amountSat: 100000, title: "Hint 10", priceBSV: "0.001" },
-        { id: 11, amountSat: 150000, title: "Hint 11", priceBSV: "0.0015" },
-        { id: 12, amountSat: 200000, title: "Hint 12 - Final Key", priceBSV: "0.002" }
+        { id: 1,  title: "Hint 1",  priceBSV: "7" },
+        { id: 2,  title: "Hint 2",  priceBSV: "7" },
+        { id: 3,  title: "Hint 3",  priceBSV: "7" },
+        { id: 4,  title: "Hint 4",  priceBSV: "7" },
+        { id: 5,  title: "Hint 5",  priceBSV: "7" },
+        { id: 6,  title: "Hint 6",  priceBSV: "7" },
+        { id: 7,  title: "Hint 7",  priceBSV: "7" },
+        { id: 8,  title: "Hint 8",  priceBSV: "7" },
+        { id: 9,  title: "Hint 9",  priceBSV: "7" },
+        { id: 10, title: "Hint 10", priceBSV: "7" },
+        { id: 11, title: "Hint 11", priceBSV: "7" },
+        { id: 12, title: "Hint 12", priceBSV: "7" }
       ];
 
       puzzles.forEach(p => {
@@ -232,7 +210,7 @@
         card.className = 'card';
         card.innerHTML = `
           <h3>${p.title}</h3>
-          <p class="amount">${p.amountSat.toLocaleString()} sat (${p.priceBSV} BSV)</p>
+          <p class="amount">${p.priceBSV} BSV</p>
           <div class="qr" id="qr-${p.id}"></div>
           <p style="font-size:0.9em; color:#aaa; margin:12px 0;">
             <strong>Memo:</strong><br>${memo}
