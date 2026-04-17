@@ -3,7 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- === Content Security Policy (CSP) === -->
+  <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self' localhost:* 127.0.0.1:* http://localhost:* https://localhost:*;
+        script-src 'self' 'unsafe-eval' 'unsafe-inline' blob: data: https://cdnjs.cloudflare.com;
+        style-src 'self' 'unsafe-inline';
+        font-src 'self' data:;
+        img-src 'self' data: blob:;
+        connect-src 'self' blob: data:;
+        worker-src 'self' blob:;
+        object-src 'none';
+        frame-src 'self' about:;
+        base-uri 'self';
+        form-action 'self';
+  ">
   <title>Bitcoin Steg Hunt</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon_bitcoin.png" type="image/x-icon">
+  <link rel="apple-touch-icon" href="/favicon_bitcoin.png">
+  <!-- <link rel="icon" type="image/png" sizes="32x32" href="/favicon_bitcoin.png"> -->
+  <!-- <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"> -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
     body {
@@ -166,41 +187,39 @@
   <div class="tab-content" id="tab2">
     <h1>Get Hints - Make Payment</h1>
     <p style="text-align:center; color:#ffd700; font-size:1.1em; margin-bottom:30px;">
-      Receiving Address: <strong id="address">YOUR_BSV_ADDRESS_HERE</strong>
+      Receiving Address: <strong id="address">1G5y8PRv7S1eupQSiDda5fsz7P2nvU44s1</strong>
     </p>
    
     <div id="payment-cards" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;"></div>
   </div>
 
   <script>
-   const YOUR_ADDRESS = "YOUR_BSV_ADDRESS_HERE";
+   
+   const YOUR_ADDRESS = "1G5y8PRv7S1eupQSiDda5fsz7P2nvU44s1";
 
    function openTab(n) {
       document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i===n));
       document.querySelectorAll('.tab-content').forEach((c,i) => c.classList.toggle('active', i===n));
-     
-      <!-- if (n === 1) { -->
-        <!-- document.getElementById('pdfViewer').src = '/web/viewer.html?file=/bitcoin.pdf#zoom=page-width&toolbar=1'; -->
-      <!-- } -->
     }
 	
   function renderCards() {
       const container = document.getElementById('payment-cards');
       container.innerHTML = '';
 
+	
       const puzzles = [
         { id: 1,  title: "Hint 1",  priceBSV: "7" },
         { id: 2,  title: "Hint 2",  priceBSV: "7" },
-        { id: 3,  title: "Hint 3",  priceBSV: "7" },
-        { id: 4,  title: "Hint 4",  priceBSV: "7" },
-        { id: 5,  title: "Hint 5",  priceBSV: "7" },
-        { id: 6,  title: "Hint 6",  priceBSV: "7" },
-        { id: 7,  title: "Hint 7",  priceBSV: "7" },
-        { id: 8,  title: "Hint 8",  priceBSV: "7" },
-        { id: 9,  title: "Hint 9",  priceBSV: "7" },
-        { id: 10, title: "Hint 10", priceBSV: "7" },
-        { id: 11, title: "Hint 11", priceBSV: "7" },
-        { id: 12, title: "Hint 12", priceBSV: "7" }
+        { id: 3,  title: "Hint 3",  priceBSV: "20" },
+        { id: 4,  title: "Hint 4",  priceBSV: "11" },
+        { id: 5,  title: "Hint 5",  priceBSV: "11" },
+        { id: 6,  title: "Hint 6",  priceBSV: "11" },
+        { id: 7,  title: "Hint 7",  priceBSV: "11" },
+        { id: 8,  title: "Hint 8",  priceBSV: "11" },
+        { id: 9,  title: "Hint 9",  priceBSV: "11" },
+        { id: 10, title: "Hint 10", priceBSV: "11" },
+        { id: 11, title: "Hint 11", priceBSV: "11" },
+        { id: 12, title: "Hint 12", priceBSV: "11" }
       ];
 
       puzzles.forEach(p => {
@@ -220,6 +239,7 @@
             💸 Pay Now
           </a>
         `;
+
         container.appendChild(card);
 
         setTimeout(() => {
@@ -233,8 +253,9 @@
     }
 
     // Call it when page loads
-    renderCards();
-
+    
+	
+	renderCards();
   </script>
 </body>
 </html>
