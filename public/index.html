@@ -157,7 +157,8 @@
         <p>Each puzzle has a corresponding hint. Pay the required amount and include your email in the memo to receive the hint directly in your inbox.</p>
         <p>This is more than just a game — it's a journey to rediscover Satoshi's true vision for peer-to-peer electronic cash.</p>
 		<p>The money gained from the hints will go to a heart foundation (still to be decided which one). I will gain nothing from this other than a relief of finally sharing this information out there :). </p>
-       
+        <p>Why so expensive? If I am right, and I think I am, the hints are too cheap! Besides the money is going to a good cause, a very good cause! 
+		
         <p style="margin-top:25px; color:#ffd700;">
           <strong>Ready to begin?</strong><br>
           Go to the <strong>Get Hints</strong> tab to start unlocking the secrets.
@@ -208,18 +209,18 @@
 
 	
       const puzzles = [
-        { id: 1,  title: "Hint 1",  priceBSV: "7" },
-        { id: 2,  title: "Hint 2",  priceBSV: "7" },
-        { id: 3,  title: "Hint 3",  priceBSV: "20" },
-        { id: 4,  title: "Hint 4",  priceBSV: "11" },
-        { id: 5,  title: "Hint 5",  priceBSV: "11" },
-        { id: 6,  title: "Hint 6",  priceBSV: "11" },
-        { id: 7,  title: "Hint 7",  priceBSV: "11" },
-        { id: 8,  title: "Hint 8",  priceBSV: "11" },
-        { id: 9,  title: "Hint 9",  priceBSV: "11" },
-        { id: 10, title: "Hint 10", priceBSV: "11" },
-        { id: 11, title: "Hint 11", priceBSV: "11" },
-        { id: 12, title: "Hint 12", priceBSV: "11" }
+        { id: 1,  title: "Hint 1",  priceBSV: "7", summary: "The genesis address explained"},
+        { id: 2,  title: "Hint 2",  priceBSV: "7", summary: "Do steg puzzles actually exist in the whitepaper?" },
+        { id: 3,  title: "Hint 3",  priceBSV: "20", summary: "Getting a head start" },
+        { id: 4,  title: "Hint 4",  priceBSV: "11", summary: "To be anounced" },
+        { id: 5,  title: "Hint 5",  priceBSV: "11", summary: "To be anounced" },
+        { id: 6,  title: "Hint 6",  priceBSV: "11", summary: "To be anounced" },
+        { id: 7,  title: "Hint 7",  priceBSV: "11", summary: "To be anounced" },
+        { id: 8,  title: "Hint 8",  priceBSV: "11", summary: "To be anounced" },
+        { id: 9,  title: "Hint 9",  priceBSV: "11", summary: "To be anounced"},
+        { id: 10, title: "Hint 10", priceBSV: "11", summary: "To be anounced" },
+        { id: 11, title: "Hint 11", priceBSV: "11", summary: "To be anounced" },
+        { id: 12, title: "Hint 12", priceBSV: "11", summary: "To be anounced" }
       ];
 
       puzzles.forEach(p => {
@@ -230,6 +231,7 @@
         card.className = 'card';
         card.innerHTML = `
           <h3>${p.title}</h3>
+		  <p style="font-size: 0.95em; color: #aaa; margin:8px 0; min-height: 44px;">${p.summary}</p>
           <p class="amount">${p.priceBSV} BSV</p>
           <div class="qr" id="qr-${p.id}"></div>
           <p style="font-size:0.9em; color:#aaa; margin:12px 0;">
